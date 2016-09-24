@@ -13,8 +13,10 @@ client = Twitter::REST::Client.new do |config|
     config.access_token_secret = ENV['ACCESS_TOKEN_SECRET']
 end
 
+tweet = ""
+
 client.search("from:realdonaldtrump", :result_type => "recent").take(1).collect do |tweet|
-    p "#{tweet.user.screen_name}: #{tweet.text}"
+    tweet = "#{tweet.user.screen_name}: #{tweet.text}"
 end
 
 # These code snippets use an open-source library.
@@ -25,7 +27,7 @@ response = Unirest.post "https://twinword-sentiment-analysis.p.mashape.com/analy
     "Accept" => "application/json"
   },
   parameters:{
-    "text" => "great value in its price range!"
+    "text" => "#{tweet}"
   }
 
   p response
