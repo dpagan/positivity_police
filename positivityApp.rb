@@ -12,4 +12,6 @@ client = Twitter::REST::Client.new do |config|
     config.access_token_secret = ENV['ACCESS_TOKEN_SECRET']
 end
 
-client.update("This tweet was created with ruby!")
+client.search("hate", :result_type => "recent").take(1).collect do |tweet|
+    p "#{tweet.user.screen_name}: #{tweet.text}"
+end
