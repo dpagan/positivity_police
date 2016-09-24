@@ -16,9 +16,9 @@ end
 tweet = ""
 
 client.search("from:realdonaldtrump", :result_type => "recent").take(1).collect do |tweet|
-    tweet = "#{tweet.user.screen_name}: #{tweet.text}"
+    tweet = "#{tweet.text}"
 end
-
+p tweet
 # These code snippets use an open-source library.
 response = Unirest.post "https://twinword-sentiment-analysis.p.mashape.com/analyze/",
   headers:{
@@ -30,4 +30,4 @@ response = Unirest.post "https://twinword-sentiment-analysis.p.mashape.com/analy
     "text" => "#{tweet}"
   }
 
-  p response
+  p response.raw_body
