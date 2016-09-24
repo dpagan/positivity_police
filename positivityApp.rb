@@ -14,11 +14,12 @@ client = Twitter::REST::Client.new do |config|
 end
 
 tweetText = ""
+tweetFrom = "realdonaldtrump"
 
-client.search("from:realdonaldtrump", :result_type => "recent").take(1).collect do |tweet|
+client.search("from:#{tweetFrom}", :result_type => "recent").take(1).collect do |tweet|
     tweetText = "#{tweet.text}"
 end
-p tweetText
+
 # These code snippets use an open-source library.
 response = Unirest.post "https://twinword-sentiment-analysis.p.mashape.com/analyze/",
   headers:{
@@ -30,4 +31,6 @@ response = Unirest.post "https://twinword-sentiment-analysis.p.mashape.com/analy
     "text" => "#{tweetText}"
   }
 
-  p response.body["score"]
+score = response.body["score"]
+
+client.update("@#{tweetFrom}  has a positivity rating of #{score}")
