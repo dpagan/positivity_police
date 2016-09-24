@@ -30,8 +30,28 @@ response = Unirest.post "https://twinword-sentiment-analysis.p.mashape.com/analy
     "text" => "#{tweetText}"
   }
 
-score = response.body["score"]
+score = response.body["score"].to_f
+rating = ""
+
+if score >= 0.75
+    rating = "heavenly"
+elsif score >= 0.50
+    rating = "very positive"
+elsif score >= 0.25
+    rating = "positive"
+elsif score >= 0.1
+    rating = "neutral leaning positive"
+elsif (score - 0).abs < 0.1
+    rating = "neutral"
+elsif score <= -0.75
+    rating = "practically Hitler"
+elsif score <= -0.50
+    rating = "very negative"
+elsif score <= -0.25
+    rating = "negative"
+elsif score <= -0.1
+    rating = "neutral leaning negative"
+end
 
 link = "http://twitter.com/#{tweetFrom}/status/#{tweetId}"
-
-client.update("The most recent post from @#{tweetFrom}  has a positivity rating of #{score}. #{link}")
+client.update("The most recent post from @#{tweetFrom}  has a positivity rating of #{rating} (#{score.round(3)}). #{link}")
