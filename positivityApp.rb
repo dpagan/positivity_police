@@ -4,7 +4,6 @@ require 'dotenv'
 
 #load environment variables from .env file
 Dotenv.load
-
 # set up connection to twitter bot
 client = Twitter::REST::Client.new do |config|
     config.consumer_key = ENV['CONSUMER_KEY']
@@ -13,12 +12,12 @@ client = Twitter::REST::Client.new do |config|
     config.access_token_secret = ENV['ACCESS_TOKEN_SECRET']
 end
 
-tweetText = ""
-tweetFrom = "realdonaldtrump"
+tweetFrom = ARGV[0]
 
-client.search("from:#{tweetFrom}", :result_type => "recent").take(1).collect do |tweet|
-    tweetText = "#{tweet.text}"
-end
+tweet = client.search("from:#{tweetFrom}", :result_type => "recent").take(1).collect.next
+
+tweetText = tweet.text
+tweetId = tweet.id
 
 # These code snippets use an open-source library.
 response = Unirest.post "https://twinword-sentiment-analysis.p.mashape.com/analyze/",
@@ -33,4 +32,6 @@ response = Unirest.post "https://twinword-sentiment-analysis.p.mashape.com/analy
 
 score = response.body["score"]
 
-client.update("The most recent post from @#{tweetFrom}  has a positivity rating of #{score}")
+link = "http://twitter.com/#{tweetFrom}/status/#{tweetId}"
+
+client.update("The most recent post from @#{tweetFrom}  has a positivity rating of #{score}. #{link}")
