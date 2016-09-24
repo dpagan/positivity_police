@@ -33,4 +33,4 @@ response = Unirest.post "https://twinword-sentiment-analysis.p.mashape.com/analy
 
 score = response.body["score"]
 
-client.update("@#{tweetFrom}  has a positivity rating of #{score}")
+client.update("The most recent post from @#{tweetFrom}  has a positivity rating of #{score}")
